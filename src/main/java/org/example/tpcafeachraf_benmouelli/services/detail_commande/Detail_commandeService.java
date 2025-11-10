@@ -5,6 +5,8 @@ import org.example.tpcafeachraf_benmouelli.dto.datailscommande.DetailCommandeReq
 import org.example.tpcafeachraf_benmouelli.dto.datailscommande.DetailCommandeResponse;
 import org.example.tpcafeachraf_benmouelli.entities.Detail_Commande;
 import org.example.tpcafeachraf_benmouelli.mappers.detailscommande.DetailCommandeMapper;
+import org.example.tpcafeachraf_benmouelli.repositories.ArticleRepository;
+import org.example.tpcafeachraf_benmouelli.repositories.CommandeRepository;
 import org.example.tpcafeachraf_benmouelli.repositories.DetailCommandeRepository;
 import org.springframework.stereotype.Service;
 
@@ -17,20 +19,50 @@ public class Detail_commandeService implements IDetail_commandeSerivce {
 
     private DetailCommandeRepository detailCommandeRepository;
     private DetailCommandeMapper detailCommandeMapper;
+    private final CommandeRepository commandeRepository;
+    private final ArticleRepository articleRepository;
 
     // ✅ Nouvelles méthodes avec DTO
     @Override
     public DetailCommandeResponse addDetailCommande(DetailCommandeRequest dto) {
         Detail_Commande entity = detailCommandeMapper.toEntity(dto);
+
+        // Lier la commande
+        if (dto.getCommandeId() != 0) {
+            commandeRepository.findById(dto.getCommandeId())
+                    .ifPresent(entity::setCommande);
+        }
+
+        // Lier l'article
+        if (dto.getArticleId() != 0) {
+            articleRepository.findById(dto.getArticleId())
+                    .ifPresent(entity::setArticle);
+        }
+
         Detail_Commande saved = detailCommandeRepository.save(entity);
         return detailCommandeMapper.toDto(saved);
     }
 
     @Override
     public List<DetailCommandeResponse> saveDetailCommandes(List<DetailCommandeRequest> dtos) {
-        List<Detail_Commande> entities = dtos.stream()
-                .map(detailCommandeMapper::toEntity)
-                .collect(Collectors.toList());
+        List<Detail_Commande> entities = dtos.stream().map(dto -> {
+            Detail_Commande entity = detailCommandeMapper.toEntity(dto);
+
+            // Lier la commande
+            if (dto.getCommandeId() != 0) {
+                commandeRepository.findById(dto.getCommandeId())
+                        .ifPresent(entity::setCommande);
+            }
+
+            // Lier l'article
+            if (dto.getArticleId() != 0) {
+                articleRepository.findById(dto.getArticleId())
+                        .ifPresent(entity::setArticle);
+            }
+
+            return entity;
+        }).collect(Collectors.toList());
+
         List<Detail_Commande> saved = detailCommandeRepository.saveAll(entities);
         return saved.stream().map(detailCommandeMapper::toDto).collect(Collectors.toList());
     }

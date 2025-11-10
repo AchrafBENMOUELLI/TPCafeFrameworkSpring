@@ -15,5 +15,5 @@ public class DetailCommandeResponse {
     private float sousTotalDetailArticle;
     private float sousTotalDetailArticleApresPromo;
 
-    private ArticleResponse article; // déjà existant
+    private Long articleId;
 }

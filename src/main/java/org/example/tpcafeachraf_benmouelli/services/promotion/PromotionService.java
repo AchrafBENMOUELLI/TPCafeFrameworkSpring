@@ -3,46 +3,63 @@ package org.example.tpcafeachraf_benmouelli.services.promotion;
 import lombok.AllArgsConstructor;
 import org.example.tpcafeachraf_benmouelli.dto.promotion.PromotionRequest;
 import org.example.tpcafeachraf_benmouelli.dto.promotion.PromotionResponse;
+import org.example.tpcafeachraf_benmouelli.entities.Article;
 import org.example.tpcafeachraf_benmouelli.entities.Promotion;
 import org.example.tpcafeachraf_benmouelli.mappers.promotion.PromotionMapper;
+import org.example.tpcafeachraf_benmouelli.repositories.ArticleRepository;
 import org.example.tpcafeachraf_benmouelli.repositories.PromotionRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class PromotionService implements IPromotionService {
 
-    private PromotionRepository promotionRepository;
-    private PromotionMapper promotionMapper;
+    private final PromotionRepository promotionRepository;
+    private final ArticleRepository articleRepository;
+    private final PromotionMapper promotionMapper;
 
-    // ───────────── Nouvelles méthodes avec DTO ─────────────
+    // ───────────── Ajouter une promotion avec articles ─────────────
     @Override
     public PromotionResponse addPromotion(PromotionRequest promotionRequest) {
         Promotion promotion = promotionMapper.toEntity(promotionRequest);
+
+        // Lier les articles si fournis
+        if (promotionRequest.getArticleIds() != null) {
+            List<Article> articles = promotionRequest.getArticleIds().stream()
+                    .map(id -> articleRepository.findById(id).orElse(null))
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+            promotion.setArticles(articles);
+        } else {
+            promotion.setArticles(List.of());
+        }
+
+
         Promotion saved = promotionRepository.save(promotion);
+
         return promotionMapper.toDto(saved);
     }
 
+    // ───────────── Ajouter plusieurs promotions ─────────────
     @Override
     public List<PromotionResponse> savePromotions(List<PromotionRequest> promotionRequests) {
-        List<Promotion> promotions = promotionRequests.stream()
-                .map(promotionMapper::toEntity)
-                .collect(Collectors.toList());
-        List<Promotion> saved = promotionRepository.saveAll(promotions);
-        return saved.stream()
-                .map(promotionMapper::toDto)
+        return promotionRequests.stream()
+                .map(this::addPromotion) // réutilise addPromotion
                 .collect(Collectors.toList());
     }
 
+    // ───────────── Sélectionner par ID ─────────────
     @Override
     public PromotionResponse selectPromotionById(long id) {
         Promotion promotion = promotionRepository.findById(id).orElseThrow();
         return promotionMapper.toDto(promotion);
     }
 
+    // ───────────── Sélectionner toutes les promotions ─────────────
     @Override
     public List<PromotionResponse> selectAllPromotions() {
         return promotionRepository.findAll().stream()
@@ -50,62 +67,27 @@ public class PromotionService implements IPromotionService {
                 .collect(Collectors.toList());
     }
 
+    // ───────────── Supprimer par ID ─────────────
     @Override
     public void deletePromotionById(long id) {
         promotionRepository.deleteById(id);
     }
 
+    // ───────────── Supprimer toutes les promotions ─────────────
     @Override
     public void deleteAllPromotions() {
         promotionRepository.deleteAll();
     }
 
+    // ───────────── Compter les promotions ─────────────
     @Override
     public long countingPromotions() {
         return promotionRepository.count();
     }
 
+    // ───────────── Vérifier existence ─────────────
     @Override
     public boolean verifyPromotion(long id) {
         return promotionRepository.existsById(id);
     }
-
-    // ───────────── Anciennes méthodes avec entité brute ─────────────
-    /*
-    public Promotion addPromotion(Promotion promotion) {
-        return promotionRepository.save(promotion);
-    }
-
-    public List<Promotion> savePromotions(List<Promotion> promotions) {
-        return promotionRepository.saveAll(promotions);
-    }
-
-    public Promotion selectPromotionById(long id) {
-        return promotionRepository.findById(id).get();
-    }
-
-    public List<Promotion> selectAllPromotions(List<Promotion> promotions) {
-        return promotionRepository.findAll();
-    }
-
-    public void deletePromotion(Promotion promotion) {
-        promotionRepository.delete(promotion);
-    }
-
-    public void deleteAllPromotions() {
-        promotionRepository.deleteAll();
-    }
-
-    public void deletePromotionById(long id) {
-        promotionRepository.deleteById(id);
-    }
-
-    public long countingPromotions() {
-        return promotionRepository.count();
-    }
-
-    public boolean verifPromotion(long id) {
-        return promotionRepository.existsById(id);
-    }
-    */
 }

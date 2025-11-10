@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -31,6 +32,7 @@ public class Promotion {
     LocalDate dateFinPromo;
     ///////////////////////////
     @ManyToMany(mappedBy = "promotions")
-    List<Article> articles;
+    private List<Article> articles = new ArrayList<>();
+
     ////////////////////////////
 }

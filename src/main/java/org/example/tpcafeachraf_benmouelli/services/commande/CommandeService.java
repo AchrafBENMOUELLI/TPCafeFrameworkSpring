@@ -4,44 +4,73 @@ import lombok.AllArgsConstructor;
 import org.example.tpcafeachraf_benmouelli.dto.commande.CommandeRequest;
 import org.example.tpcafeachraf_benmouelli.dto.commande.CommandeResponse;
 import org.example.tpcafeachraf_benmouelli.entities.Commande;
+import org.example.tpcafeachraf_benmouelli.entities.Detail_Commande;
 import org.example.tpcafeachraf_benmouelli.mappers.commande.CommandeMapper;
+import org.example.tpcafeachraf_benmouelli.mappers.detailscommande.DetailCommandeMapper;
+import org.example.tpcafeachraf_benmouelli.repositories.ClientRepository;
 import org.example.tpcafeachraf_benmouelli.repositories.CommandeRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @AllArgsConstructor
 public class CommandeService implements ICommandeService {
 
-    private CommandeRepository commandeRepository;
-    private CommandeMapper commandeMapper;
+    private final CommandeRepository commandeRepository;
+    private final CommandeMapper commandeMapper;
+    private final ClientRepository clientRepository;
+    private final DetailCommandeMapper detailCommandeMapper;
 
-    // ─────────────── Nouvelles méthodes avec DTOs ───────────────
+    // ─────────────── Ajout d'une commande ───────────────
     @Override
     public CommandeResponse addCommande(CommandeRequest dto) {
         Commande commande = commandeMapper.toEntity(dto);
+
+        // Lier le client
+        if (dto.getClientId() != null) {
+            clientRepository.findById(dto.getClientId())
+                    .ifPresent(commande::setClient);
+        }
+
+        // Initialiser la liste des détails si null
+        if (commande.getDetail_commande() == null) {
+            commande.setDetail_commande(new ArrayList<>());
+        }
+
+        // Lier les détails
+        if (dto.getDetails() != null) {
+            dto.getDetails().forEach(detailDto -> {
+                Detail_Commande detail = detailCommandeMapper.toEntity(detailDto);
+                detail.setCommande(commande);
+                commande.getDetail_commande().add(detail);
+            });
+        }
+
         Commande saved = commandeRepository.save(commande);
         return commandeMapper.toDto(saved);
     }
 
+    // ─────────────── Ajout multiple ───────────────
     @Override
     public List<CommandeResponse> saveCommandes(List<CommandeRequest> dtos) {
-        List<Commande> commandes = dtos.stream()
-                .map(commandeMapper::toEntity)
-                .toList();
-        List<Commande> savedList = commandeRepository.saveAll(commandes);
-        return savedList.stream()
-                .map(commandeMapper::toDto)
-                .toList();
+        List<CommandeResponse> responses = new ArrayList<>();
+        for (CommandeRequest dto : dtos) {
+            responses.add(addCommande(dto)); // réutilise la méthode addCommande
+        }
+        return responses;
     }
 
+    // ─────────────── Récupérer par ID ───────────────
     @Override
     public CommandeResponse selectCommandeById(long id) {
-        Commande commande = commandeRepository.findById(id).orElse(null);
-        return (commande != null) ? commandeMapper.toDto(commande) : null;
+        return commandeRepository.findById(id)
+                .map(commandeMapper::toDto)
+                .orElse(null);
     }
 
+    // ─────────────── Récupérer toutes les commandes ───────────────
     @Override
     public List<CommandeResponse> selectAllCommandes() {
         List<Commande> commandes = commandeRepository.findAll();
@@ -50,27 +79,33 @@ public class CommandeService implements ICommandeService {
                 .toList();
     }
 
+    // ─────────────── Suppression par ID ───────────────
     @Override
     public void deleteCommandeById(long id) {
         commandeRepository.deleteById(id);
     }
 
+    // ─────────────── Suppression de toutes les commandes ───────────────
     @Override
     public void deleteAllCommandes() {
         commandeRepository.deleteAll();
     }
 
+    // ─────────────── Compter les commandes ───────────────
     @Override
     public long countingCommandes() {
         return commandeRepository.count();
     }
 
+    // ─────────────── Vérifier existence ───────────────
     @Override
     public boolean verifCommande(long id) {
         return commandeRepository.existsById(id);
     }
+}
 
-    // ─────────────── Anciennes méthodes conservées ───────────────
+
+// ─────────────── Anciennes méthodes conservées ───────────────
     /*
     @Override
     public Commande addCommande(Commande commande) {
@@ -122,4 +157,4 @@ public class CommandeService implements ICommandeService {
         return commandeRepository.existsById(id);
     }
     */
-}
+

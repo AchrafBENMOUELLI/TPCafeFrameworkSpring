@@ -4,8 +4,10 @@ import lombok.AllArgsConstructor;
 import org.example.tpcafeachraf_benmouelli.dto.cartefidelite.CarteFideliteRequest;
 import org.example.tpcafeachraf_benmouelli.dto.cartefidelite.CarteFideliteResponse;
 import org.example.tpcafeachraf_benmouelli.entities.CarteFidelite;
+import org.example.tpcafeachraf_benmouelli.entities.Client;
 import org.example.tpcafeachraf_benmouelli.mappers.cartefidelite.CarteFideliteMapper;
 import org.example.tpcafeachraf_benmouelli.repositories.CarteFideliteRepository;
+import org.example.tpcafeachraf_benmouelli.repositories.ClientRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,13 +19,22 @@ public class CarteFideliteService implements ICarteFideliteService {
 
     private CarteFideliteRepository carteFideliteRepository;
     private CarteFideliteMapper carteFideliteMapper;
+    private ClientRepository clientRepository;
 
     @Override
     public CarteFideliteResponse addCarteFidelite(CarteFideliteRequest request) {
         CarteFidelite carte = carteFideliteMapper.toEntity(request);
+
+        if (request.getClientId() != null) {
+            Client client = clientRepository.findById(request.getClientId())
+                    .orElseThrow(() -> new RuntimeException("Client non trouvé avec l'id " + request.getClientId()));
+            carte.setClient(client);
+        }
+
         CarteFidelite saved = carteFideliteRepository.save(carte);
         return carteFideliteMapper.toDto(saved);
     }
+
 
     @Override
     public List<CarteFideliteResponse> saveCarteFidelites(List<CarteFideliteRequest> cartes) {

@@ -10,7 +10,7 @@ import org.mapstruct.Mapping;
 public interface PromotionMapper {
     PromotionResponse toDto(Promotion promotion);
 
-   /* @Mapping(target = "idPromotion", ignore = true) // ID auto-généré
-    @Mapping(target = "articles", ignore = true)*/
+    @Mapping(target = "idPromotion", ignore = true)
+    @Mapping(target = "articles", ignore = true)
     Promotion toEntity(PromotionRequest request);
 }

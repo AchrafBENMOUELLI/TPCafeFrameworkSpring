@@ -2,9 +2,11 @@ package org.example.tpcafeachraf_benmouelli.dto.commande;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.example.tpcafeachraf_benmouelli.dto.datailscommande.DetailCommandeRequest;
 import org.example.tpcafeachraf_benmouelli.entities.StatusCommande;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -19,4 +21,5 @@ public class CommandeRequest {
 
     // ⚙️ Relations : on envoie seulement les IDs
     private Long clientId;
+    private List<DetailCommandeRequest> details;
 }

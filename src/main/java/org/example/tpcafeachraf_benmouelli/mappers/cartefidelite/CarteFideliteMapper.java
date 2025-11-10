@@ -8,6 +8,7 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface CarteFideliteMapper {
+    @Mapping(target = "client", ignore = true)
     CarteFideliteResponse toDto(CarteFidelite carteFidelite);
 
    @Mapping(target = "idCarteFidelite", ignore = true)

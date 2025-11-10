@@ -10,9 +10,10 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring", uses = {CommandeMapper.class, ArticleMapper.class})
 public interface DetailCommandeMapper {
+    @Mapping(target = "articleId", source = "article.idArticle")
     DetailCommandeResponse toDto(Detail_Commande detailCommande);
-   /* @Mapping(target = "idDetailCommande", ignore = true)  // ID auto-généré
-    @Mapping(target = "article", ignore = true)          // Relation Article ignorée
-    @Mapping(target = "commande", ignore = true)*/
+    @Mapping(target = "idDetailCommande", ignore = true)
+    @Mapping(target = "commande", ignore = true)   // lié dans service
+    @Mapping(target = "article", ignore = true)    // lié dans service
     Detail_Commande toEntity(DetailCommandeRequest request);
 }

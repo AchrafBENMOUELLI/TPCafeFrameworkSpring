@@ -16,6 +16,6 @@ public class PromotionRequest {
     String pourcentagePromo;
     LocalDate dateDebutPromo;
     LocalDate dateFinPromo;
-    List<Long> articleIds; // IDs des articles concernés
+    List<Long> articleIds;
 }
 

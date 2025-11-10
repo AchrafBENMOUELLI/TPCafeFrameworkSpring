@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -28,9 +29,12 @@ public class Article {
     @Enumerated(EnumType.STRING)
     TypeArticle typeArticle;
     /////////////////////////////
-    @OneToMany(mappedBy = "article")
-    List<Detail_Commande> detailCommandes;
     @ManyToMany
-    List<Promotion> promotions;
-    /////////////////////////////
+    @JoinTable(
+            name = "article_promotions", // le nom exact de ta table intermédiaire
+            joinColumns = @JoinColumn(name = "articles_id_article"),        // colonne vers Article
+            inverseJoinColumns = @JoinColumn(name = "promotions_id_promotion") // colonne vers Promotion
+    )
+    private List<Promotion> promotions = new ArrayList<>();
+
 }

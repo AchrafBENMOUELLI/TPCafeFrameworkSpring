@@ -19,5 +19,5 @@ public class PromotionResponse {
     LocalDate dateDebutPromo;
     LocalDate dateFinPromo;
 
-    List<ArticleResponse> articles; // réutilisation de ton DTO d'article
+    List<ArticleResponse> articles;
 }
