@@ -2,6 +2,8 @@ package org.example.tpcafeachraf_benmouelli.repositories;
 
 import org.example.tpcafeachraf_benmouelli.entities.Client;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.example.tpcafeachraf_benmouelli.entities.TypeArticle;
+
 
 import java.time.LocalDate;
 import java.util.List;
@@ -42,17 +44,17 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
 
     List<Client> findByAdresse_VilleIn(List<String> villes);
 
-    List<Client> findByCarteFidelite_PtsAccumulesGreaterThan(Integer pts);
+    List<Client> findByCarteFidelite_PointAccumulesGreaterThan(Integer pts);
 
-    List<Client> findByCarteFidelite_PtsAccumulesGreaterThanEqual(Integer pts);
+    List<Client> findByCarteFidelite_PointAccumulesGreaterThanEqual(Integer pts);
 
-    List<Client> findByCarteFidelite_PtsAccumulesBetween(Integer min, Integer max);
+    List<Client> findByCarteFidelite_PointAccumulesBetween(Integer min, Integer max);
 
-    List<Client> findByCommandes_Articles_Nom(String nomArticle);
+    List<Client> findByCommandes_Detail_commande_Article_NomArticle(String nomArticle);
 
-    List<Client> findByNomContainingIgnoreCaseAndCommandes_Articles_Type(String nom, String typeArticle);
+    List<Client> findByNomContainingIgnoreCaseAndCommandes_Detail_commande_Article_TypeArticle(String nom, TypeArticle typeArticle);
 
     //les affectations simple//
-    Client findByCin(long cin);
+    Client findByIdClient(long cin);
     ///////////////////////////
 }

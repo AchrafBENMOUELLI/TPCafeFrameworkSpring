@@ -11,47 +11,41 @@ import java.util.List;
 
 public interface CarteFideliteRepository extends JpaRepository<CarteFidelite, Long> {
     @Query("SELECT cf FROM CarteFidelite cf WHERE cf.pointAccumules = :pts")
-    List<CarteFidelite> getByPointAccumules(@Param("pts") int pts);
-
-    @Query("SELECT cf FROM CarteFidelite cf WHERE cf.pointAccumules > :pts")
-    List<CarteFidelite> getByPointAccumulesGreaterThan(@Param("pts") int pts);
-
-    @Query("SELECT cf FROM CarteFidelite cf WHERE cf.pointAccumules >= :pts")
-    List<CarteFidelite> getByPointAccumulesGreaterOrEqual(@Param("pts") int pts);
-
-    @Query("SELECT cf FROM CarteFidelite cf WHERE cf.pointAccumules < :pts")
-    List<CarteFidelite> getByPointAccumulesLessThan(@Param("pts") int pts);
-
-    @Query("SELECT cf FROM CarteFidelite cf WHERE cf.pointAccumules <= :pts")
-    List<CarteFidelite> getByPointAccumulesLessOrEqual(@Param("pts") int pts);
-
-    @Query("SELECT cf FROM CarteFidelite cf WHERE cf.pointAccumules BETWEEN :min AND :max")
-    List<CarteFidelite> getByPointAccumulesBetween(@Param("min") int min, @Param("max") int max);
+    List<CarteFidelite> findByExactPoints(@Param("pts") int pts);
 
     @Query("SELECT cf FROM CarteFidelite cf WHERE cf.dateCreation = :date")
-    List<CarteFidelite> getByDateCreation(@Param("date") LocalDate date);
+    List<CarteFidelite> findByCreationDate(@Param("date") LocalDate date);
 
-    @Query("SELECT cf FROM CarteFidelite cf WHERE cf.dateCreation > :date")
-    List<CarteFidelite> getCreatedAfter(@Param("date") LocalDate date);
+    @Query("SELECT COUNT(cf) FROM CarteFidelite cf WHERE cf.pointAccumules > :pts")
+    Long countByPointsGreaterThan(@Param("pts") int pts);
 
-    @Query("SELECT cf FROM CarteFidelite cf WHERE cf.dateCreation < :date")
-    List<CarteFidelite> getCreatedBefore(@Param("date") LocalDate date);
+    @Query("DELETE FROM CarteFidelite cf WHERE cf.dateCreation < :date")
+    void deleteCreatedBefore(@Param("date") LocalDate date);
 
-    @Query("SELECT cf FROM CarteFidelite cf WHERE cf.client.idClient = :idClient")
-    CarteFidelite getByClientId(@Param("idClient") Long idClient);
+    @Query("SELECT cf FROM CarteFidelite cf WHERE cf.pointAccumules BETWEEN :min AND :max AND cf.dateCreation > :date")
+    List<CarteFidelite> findByPointsBetweenAndCreatedAfter(@Param("min") int min, @Param("max") int max, @Param("date") LocalDate date);
 
-    @Query("SELECT cf FROM CarteFidelite cf WHERE cf.client.nom = :nom")
-    List<CarteFidelite> getByClientNom(@Param("nom") String nom);
+    @Query("SELECT cf FROM CarteFidelite cf WHERE cf.pointAccumules >= :pts ORDER BY cf.dateCreation ASC")
+    List<CarteFidelite> findByMinPointsOrderByCreationDate(@Param("pts") int pts);
 
-    @Query("SELECT cf FROM CarteFidelite cf WHERE cf.client.prenom = :prenom")
-    List<CarteFidelite> getByClientPrenom(@Param("prenom") String prenom);
+    @Query("SELECT cf FROM CarteFidelite cf WHERE cf.dateCreation BETWEEN :start AND :end")
+    List<CarteFidelite> findByCreationBetween(@Param("start") LocalDate start, @Param("end") LocalDate end);
 
-    @Query("SELECT cf FROM CarteFidelite cf WHERE LOWER(cf.client.nom) LIKE LOWER(CONCAT('%', :value, '%'))")
-    List<CarteFidelite> getByClientNomContains(@Param("value") String value);
+    @Query("SELECT cf FROM CarteFidelite cf WHERE cf.pointAccumules <= :pts OR cf.dateCreation < :date")
+    List<CarteFidelite> findByPointsLessOrCreatedBefore(@Param("pts") int pts, @Param("date") LocalDate date);
 
-    @Query("SELECT cf FROM CarteFidelite cf WHERE cf.client.adresse.ville = :ville")
-    List<CarteFidelite> getByClientVille(@Param("ville") String ville);
+    @Query("SELECT cf FROM CarteFidelite cf WHERE cf.pointAccumules = (SELECT MAX(c.pointAccumules) FROM CarteFidelite c)")
+    CarteFidelite findCardWithMaxPoints();
 
-    @Query("SELECT cf FROM CarteFidelite cf WHERE cf.client IN :clients")
-    List<CarteFidelite> getByClientList(@Param("clients") List<Client> clients);
+    @Query("SELECT cf FROM CarteFidelite cf WHERE cf.dateCreation IS NULL")
+    List<CarteFidelite> findByCreationDateIsNull();
+
+    @Query("SELECT cf FROM CarteFidelite cf WHERE cf.pointAccumules IS NOT NULL")
+    List<CarteFidelite> findByPointsIsNotNull();
+
+    @Query("SELECT cf FROM CarteFidelite cf WHERE cf.client.nom = :nom AND cf.client.prenom = :prenom")
+    List<CarteFidelite> findByClientName(@Param("nom") String nom, @Param("prenom") String prenom);
+
+    @Query("SELECT cf FROM CarteFidelite cf ORDER BY cf.pointAccumules DESC")
+    List<CarteFidelite> findTop5ByPoints();
 }

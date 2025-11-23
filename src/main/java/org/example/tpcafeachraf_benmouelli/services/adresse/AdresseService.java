@@ -117,7 +117,7 @@ public class AdresseService implements IAdresseService {
     @Override
     public String affecterAdresseAClient(String rue, long cin) {
         Adresse adresse = adresseRepository.findByRue(rue);
-        Client client = clientRepository.findByCin(cin);
+        Client client = clientRepository.findByIdClient(cin);
         client.setAdresse(adresse);
         clientRepository.save(client);
         return "Adresse affectée avec succès au client " + client.getNom();

@@ -31,11 +31,11 @@ public interface AdresseRepository extends JpaRepository<Adresse, Long> {
 
     List<Adresse> findByCodePostalLessThanEqual(Integer cp);
 
-    List<Adresse> findByVilleAndRueStartingWithOrderByCodePostalAsc(String ville, String prefix);
+    List<Adresse> findByVilleAndRueStartingWithOrderByCodePostalAsc(String ville, String ch);
 
-    List<Adresse> findByRueStartingWith(String prefix);
+    List<Adresse> findByRueStartingWith(String ch);
 
-    List<Adresse> findByVilleEndingWith(String suffix);
+    List<Adresse> findByVilleEndingWith(String ch);
 
     List<Adresse> findByRueIsNull();
 
