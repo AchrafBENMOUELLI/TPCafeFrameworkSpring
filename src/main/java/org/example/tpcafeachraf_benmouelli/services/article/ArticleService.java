@@ -7,6 +7,7 @@ import org.example.tpcafeachraf_benmouelli.entities.Article;
 import org.example.tpcafeachraf_benmouelli.entities.Promotion;
 import org.example.tpcafeachraf_benmouelli.mappers.article.ArticleMapper;
 import org.example.tpcafeachraf_benmouelli.repositories.ArticleRepository;
+import org.example.tpcafeachraf_benmouelli.repositories.PromotionRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 public class ArticleService implements IArticleService {
 
     private final ArticleRepository articleRepository;
+    private final PromotionRepository promotionRepository;
     private final ArticleMapper articleMapper;
 
     // Ajouter un article
@@ -93,6 +95,24 @@ public class ArticleService implements IArticleService {
             savedArticle.setPromotions(article.getPromotions());
         }
         return articleRepository.save(savedArticle);
+    }
+
+    @Override
+    public void affecterPromotionAArticle(long idArticle, long idPromo) {
+        Article article = articleRepository.findById(idArticle).get();
+        Promotion promo = promotionRepository.findById(idPromo).get();
+
+        article.getPromotions().add(promo);
+        articleRepository.save(article);
+    }
+
+    @Override
+    public void desaffecterPromotionDUnArticle(long idArticle, long idPromo) {
+        Article article = articleRepository.findById(idArticle).get();
+        Promotion promo = promotionRepository.findById(idPromo).get();
+
+        article.getPromotions().remove(promo);
+        articleRepository.save(article);
     }
 ////////////////////////////
 }

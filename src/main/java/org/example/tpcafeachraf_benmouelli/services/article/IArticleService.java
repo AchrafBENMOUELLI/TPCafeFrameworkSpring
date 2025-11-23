@@ -20,6 +20,10 @@ public interface IArticleService {
 
     //less affectation ssimples//
     Article ajouterArticleEtPromotions(Article article);
+
+    //*bonus*//
+    void affecterPromotionAArticle(long idArticle, long idPromo);
+    void desaffecterPromotionDUnArticle(long idArticle, long idPromo);
     ///////////////////////////////
 
     /*

@@ -64,5 +64,18 @@ public class ArticleRestController {
     public Article ajouterArticleEtPromotions(@RequestBody Article article) {
         return articleService.ajouterArticleEtPromotions(article);
     }
+
+
+    ////sou2el el bonus///////////
+    @PostMapping("/{idArticle}/affecter-promo/{idPromo}")
+    public void affecterPromotionAArticle(@PathVariable long idArticle, @PathVariable long idPromo) {
+        articleService.affecterPromotionAArticle(idArticle, idPromo);
+    }
+
+    ///////////////////
+    @PostMapping("/{idArticle}/desaffecter-promo/{idPromo}")
+    public void desaffecterPromotionDUnArticle(@PathVariable long idArticle, @PathVariable long idPromo) {
+        articleService.desaffecterPromotionDUnArticle(idArticle, idPromo);
+    }
     //////////////////////////////////////
 }
