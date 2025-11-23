@@ -18,6 +18,10 @@ public interface IArticleService {
     long countingArticles();
     boolean verifyArticle(long id);
 
+    //less affectation ssimples//
+    Article ajouterArticleEtPromotions(Article article);
+    ///////////////////////////////
+
     /*
     Article addArticle(Article ar);
     Article selectArticleById(long id);

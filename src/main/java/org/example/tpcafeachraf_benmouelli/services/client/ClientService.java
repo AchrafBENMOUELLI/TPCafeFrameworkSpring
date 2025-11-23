@@ -3,13 +3,17 @@ package org.example.tpcafeachraf_benmouelli.services.client;
 import lombok.AllArgsConstructor;
 import org.example.tpcafeachraf_benmouelli.dto.client.ClientRequest;
 import org.example.tpcafeachraf_benmouelli.dto.client.ClientResponse;
+import org.example.tpcafeachraf_benmouelli.entities.CarteFidelite;
 import org.example.tpcafeachraf_benmouelli.entities.Client;
+import org.example.tpcafeachraf_benmouelli.entities.Commande;
 import org.example.tpcafeachraf_benmouelli.mappers.client.ClientMapper;
 import org.example.tpcafeachraf_benmouelli.repositories.AdresseRepository;
 import org.example.tpcafeachraf_benmouelli.repositories.CarteFideliteRepository;
 import org.example.tpcafeachraf_benmouelli.repositories.ClientRepository;
+import org.example.tpcafeachraf_benmouelli.repositories.CommandeRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,6 +25,7 @@ public class ClientService implements IClientService {
     private final ClientMapper clientMapper;
     private final AdresseRepository adresseRepository;
     private final CarteFideliteRepository carteFideliteRepository;
+    private final CommandeRepository commandeRepository;
 
     // ───────────── Ajouter un client avec ses relations ─────────────
     @Override
@@ -114,6 +119,46 @@ public class ClientService implements IClientService {
     public boolean verifyClient(long id) {
         return clientRepository.existsById(id);
     }
+
+
+
+//les affectations simples//
+    @Override
+    public void affecterCarteAClient(long idCarte, long idClient) {
+        Client client = clientRepository.findById(idClient).get();
+        CarteFidelite carteFidelite = carteFideliteRepository.findById(idCarte).get();
+        client.setCarteFidelite(carteFidelite);
+        clientRepository.save(client);
+    }
+
+    @Override
+    public void affecterCommandeAClient(long idCommande, long idClient) {
+        Client client = clientRepository.findById(idClient).get();
+        Commande commande = commandeRepository.findById(idCommande).get();
+        commande.setClient(client);
+        commandeRepository.save(commande);
+    }
+
+    @Override
+    public void affecterCommandeAClient(LocalDate dateCommande, String nomClient, String prenomClient) {
+        Client client = clientRepository.findByNomAndPrenom(nomClient, prenomClient);
+        Commande commande = commandeRepository.findByDateCommande(dateCommande);
+        commande.setClient(client);
+        commandeRepository.save(commande);
+    }
+
+    @Override
+    public Client ajouterClientEtCarteFidelite(Client client) {
+        Client savedClient = clientRepository.save(client);
+        CarteFidelite carte = new CarteFidelite();
+        carte.setClient(savedClient);
+        savedClient.setCarteFidelite(carte);
+        return clientRepository.save(savedClient);
+    }
+
+    ////////////////////////////////
+
+////////////////////////////
 }
 
 

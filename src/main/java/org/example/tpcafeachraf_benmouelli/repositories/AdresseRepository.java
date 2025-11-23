@@ -25,11 +25,11 @@ public interface AdresseRepository extends JpaRepository<Adresse, Long> {
 
     List<Adresse> findByCodePostalGreaterThan(Integer cp);
 
-    List<Adresse> findByCodePostalGreaterThanOrEqualTo(Integer cp);
+    List<Adresse> findByCodePostalGreaterThanEqual(Integer cp);
 
     List<Adresse> findByCodePostalLessThan(Integer cp);
 
-    List<Adresse> findByCodePostalLessThanOrEqualTo(Integer cp);
+    List<Adresse> findByCodePostalLessThanEqual(Integer cp);
 
     List<Adresse> findByVilleAndRueStartingWithOrderByCodePostalAsc(String ville, String prefix);
 
@@ -40,5 +40,10 @@ public interface AdresseRepository extends JpaRepository<Adresse, Long> {
     List<Adresse> findByRueIsNull();
 
     List<Adresse> findByVilleIsNotNull();
+
+
+    //les affectation simple//
+    Adresse findByRue(String rue);
+    //////////////////////////
 
 }

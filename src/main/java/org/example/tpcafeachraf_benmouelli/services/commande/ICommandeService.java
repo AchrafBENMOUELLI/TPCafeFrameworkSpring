@@ -17,6 +17,11 @@ public interface ICommandeService {
     long countingCommandes();
     boolean verifCommande(long id);
 
+
+    //les affectations simples//
+    void desaffecterClientDeCommande(long idCommande);
+    ////////////////////////////
+
     // ─────────────── Anciennes méthodes conservées ───────────────
     /*
     Commande addCommande(Commande commande);

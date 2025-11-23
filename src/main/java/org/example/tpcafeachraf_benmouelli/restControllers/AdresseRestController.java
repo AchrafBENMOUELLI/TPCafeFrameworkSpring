@@ -20,20 +20,7 @@ public class AdresseRestController {
 
     private final IAdresseService adresseService;
 
-    /* @GetMapping
-    @Operation(
-            summary = "Retrieve all adresses",
-            description = "Returns a list of all adresses registered in the system",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "List of adresses retrieved successfully"),
-                    @ApiResponse(responseCode = "500", description = "Internal server error")
-            }
-    )
-    public List<Adresse> displayalladresses() {
-        return adresseService.selectAllAdresses();
-    } */
     ////////////////////////////////////////////////////////
-    // 🔄 Nouvelle version avec DTO
     @GetMapping
     @Operation(
             summary = "Retrieve all adresses",
@@ -47,13 +34,6 @@ public class AdresseRestController {
         return adresseService.selectAllAdresses();
     }
     ////////////////////////////////////////////////////////
-
-    /* @PostMapping
-    public Adresse addadresse(@RequestBody Adresse adresse) {
-        return adresseService.addAdresse(adresse);
-    } */
-    ////////////////////////////////////////////////////////
-    // 🔄 Nouvelle version avec DTO
     @PostMapping
     @Operation(
             summary = "Add a new adresse",
@@ -67,33 +47,18 @@ public class AdresseRestController {
         return adresseService.addAdresse(request);
     }
     ////////////////////////////////////////////////////////
-
-    /* @PostMapping("/addalladresses")
-    public List<Adresse> addalladresses(@RequestBody List<Adresse> adresses) {
-        return adresseService.saveAdresses(adresses);
-    } */
-    ////////////////////////////////////////////////////////
-    // 🔄 Nouvelle version avec DTO
     @PostMapping("/addalladresses")
     @Operation(summary = "Add multiple adresses", description = "Saves a list of adresses using DTOs")
     public List<AdresseResponse> addAllAdresses(@RequestBody List<AdresseRequest> adressesRequest) {
         return adresseService.saveAdresses(adressesRequest);
     }
     ////////////////////////////////////////////////////////
-
-    /* @GetMapping("/displayadressebyId/{id}")
-    public Adresse displayadresseById(@PathVariable long id) {
-        return adresseService.selectAdresseById(id);
-    } */
-    ////////////////////////////////////////////////////////
-    // 🔄 Nouvelle version avec DTO
     @GetMapping("/displayadressebyId/{id}")
     @Operation(summary = "Find adresse by ID", description = "Returns adresse details by ID")
     public AdresseResponse displayAdresseById(@PathVariable long id) {
         return adresseService.selectAdresseById(id);
     }
     ////////////////////////////////////////////////////////
-
     @DeleteMapping("/deleteadresseById/{id}")
     @Operation(summary = "Delete adresse by ID")
     public void deleteAdresseById(@PathVariable long id) {
@@ -117,4 +82,14 @@ public class AdresseRestController {
     public boolean adresseExist(@PathVariable long id) {
         return adresseService.verifAdresse(id);
     }
+
+
+
+    /*les methodes simples*/
+    @PostMapping("/affecter-adresse")
+    public void affecterAdresseAClient(@RequestParam String rue, @RequestParam long cin) {
+        adresseService.affecterAdresseAClient(rue, cin);
+    }
+
+    //////////////////////////////////////
 }

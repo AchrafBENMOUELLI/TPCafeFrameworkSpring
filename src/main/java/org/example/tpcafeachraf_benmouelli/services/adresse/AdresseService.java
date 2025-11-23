@@ -4,8 +4,10 @@ import lombok.AllArgsConstructor;
 import org.example.tpcafeachraf_benmouelli.dto.adresse.AdresseRequest;
 import org.example.tpcafeachraf_benmouelli.dto.adresse.AdresseResponse;
 import org.example.tpcafeachraf_benmouelli.entities.Adresse;
+import org.example.tpcafeachraf_benmouelli.entities.Client;
 import org.example.tpcafeachraf_benmouelli.mappers.adresse.AdresseMapper;
 import org.example.tpcafeachraf_benmouelli.repositories.AdresseRepository;
+import org.example.tpcafeachraf_benmouelli.repositories.ClientRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +18,7 @@ import java.util.stream.Collectors;
 public class AdresseService implements IAdresseService {
 
     private  AdresseRepository adresseRepository;
+    private ClientRepository clientRepository;
     private  AdresseMapper adresseMapper;
 
     /* @Override
@@ -23,7 +26,7 @@ public class AdresseService implements IAdresseService {
         return adresseRepository.save(ad);
     } */
     ////////////////////////////////////////////////////////
-    // 🔄 Nouvelle version avec DTO
+    // Nouvelle version avec DTO
     @Override
     public AdresseResponse addAdresse(AdresseRequest request) {
         Adresse adresse = adresseMapper.toEntity(request);
@@ -31,13 +34,12 @@ public class AdresseService implements IAdresseService {
         return adresseMapper.toDto(saved);
     }
     ////////////////////////////////////////////////////////
-
     /* @Override
     public List<Adresse> saveAdresses(List<Adresse> adresses) {
         return adresseRepository.saveAll(adresses);
     } */
     ////////////////////////////////////////////////////////
-    // 🔄 Nouvelle version avec DTO
+    //  Nouvelle version avec DTO
     @Override
     public List<AdresseResponse> saveAdresses(List<AdresseRequest> adressesRequest) {
         List<Adresse> adresses = adressesRequest.stream()
@@ -53,7 +55,7 @@ public class AdresseService implements IAdresseService {
         return adresseRepository.findById(id).get();
     } */
     ////////////////////////////////////////////////////////
-    // 🔄 Nouvelle version avec DTO
+    //  Nouvelle version avec DTO
     @Override
     public AdresseResponse selectAdresseById(long id) {
         Adresse adresse = adresseRepository.findById(id).orElse(null);
@@ -66,7 +68,7 @@ public class AdresseService implements IAdresseService {
         return adresseRepository.findAll();
     } */
     ////////////////////////////////////////////////////////
-    // 🔄 Nouvelle version avec DTO
+    //  Nouvelle version avec DTO
     @Override
     public List<AdresseResponse> selectAllAdresses() {
         return adresseRepository.findAll()
@@ -81,7 +83,7 @@ public class AdresseService implements IAdresseService {
         adresseRepository.delete(ad);
     } */
     ////////////////////////////////////////////////////////
-    // 🔄 Nouvelle version simplifiée
+    //  Nouvelle version simplifiée
     @Override
     public void deleteAdresseById(long id) {
         adresseRepository.deleteById(id);
@@ -108,4 +110,17 @@ public class AdresseService implements IAdresseService {
     public boolean verifAdresse(long id) {
         return adresseRepository.existsById(id);
     }
+
+
+
+    //les affectations simples//
+    @Override
+    public String affecterAdresseAClient(String rue, long cin) {
+        Adresse adresse = adresseRepository.findByRue(rue);
+        Client client = clientRepository.findByCin(cin);
+        client.setAdresse(adresse);
+        clientRepository.save(client);
+        return "Adresse affectée avec succès au client " + client.getNom();
+    }
+    ////////////////////////////
 }

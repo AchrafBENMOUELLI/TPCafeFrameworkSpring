@@ -18,6 +18,17 @@ public interface IAdresseService {
     long countingAdresses();
     boolean verifAdresse(long id);
 
+    //les affectation simples//
+    String affecterAdresseAClient(String rue,long cin);
+    ///////////////////////////
+
+
+
+
+
+
+
+
     /*
     Adresse addAdresse(Adresse ad);
     List<Adresse> saveAdresses(List<Adresse> adresses);

@@ -3,6 +3,7 @@ package org.example.tpcafeachraf_benmouelli.restControllers;
 import lombok.AllArgsConstructor;
 import org.example.tpcafeachraf_benmouelli.dto.article.ArticleRequest;
 import org.example.tpcafeachraf_benmouelli.dto.article.ArticleResponse;
+import org.example.tpcafeachraf_benmouelli.entities.Article;
 import org.example.tpcafeachraf_benmouelli.services.article.IArticleService;
 import org.springframework.web.bind.annotation.*;
 
@@ -57,4 +58,11 @@ public class ArticleRestController {
     public boolean existArticle(@PathVariable long id) {
         return articleService.verifyArticle(id);
     }
+
+    /*les methodes simples*/
+    @PostMapping("/add")
+    public Article ajouterArticleEtPromotions(@RequestBody Article article) {
+        return articleService.ajouterArticleEtPromotions(article);
+    }
+    //////////////////////////////////////
 }

@@ -102,6 +102,18 @@ public class CommandeService implements ICommandeService {
     public boolean verifCommande(long id) {
         return commandeRepository.existsById(id);
     }
+
+
+
+
+//les affectations simples//
+    @Override
+    public void desaffecterClientDeCommande(long idCommande) {
+        Commande commande = commandeRepository.findById(idCommande).get();
+        commande.setClient(null);
+        commandeRepository.save(commande);
+    }
+//////////////////////////////////////
 }
 
 

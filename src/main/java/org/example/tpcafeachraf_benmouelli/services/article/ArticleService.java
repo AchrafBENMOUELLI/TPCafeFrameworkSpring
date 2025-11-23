@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.example.tpcafeachraf_benmouelli.dto.article.ArticleRequest;
 import org.example.tpcafeachraf_benmouelli.dto.article.ArticleResponse;
 import org.example.tpcafeachraf_benmouelli.entities.Article;
+import org.example.tpcafeachraf_benmouelli.entities.Promotion;
 import org.example.tpcafeachraf_benmouelli.mappers.article.ArticleMapper;
 import org.example.tpcafeachraf_benmouelli.repositories.ArticleRepository;
 import org.springframework.stereotype.Service;
@@ -78,6 +79,22 @@ public class ArticleService implements IArticleService {
     public boolean verifyArticle(long id) {
         return articleRepository.existsById(id);
     }
+//les affectations simples//
+    @Override
+    public Article ajouterArticleEtPromotions(Article article) {
+        Article savedArticle = articleRepository.save(article);
+
+        if (article.getPromotions() != null) {
+            for (Promotion promo : article.getPromotions()) {
+                if (!promo.getArticles().contains(savedArticle)) {
+                    promo.getArticles().add(savedArticle);
+                }
+            }
+            savedArticle.setPromotions(article.getPromotions());
+        }
+        return articleRepository.save(savedArticle);
+    }
+////////////////////////////
 }
 
 

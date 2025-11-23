@@ -32,9 +32,9 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
 
     List<Client> findByNomContainingIgnoreCaseOrderByPrenomDesc(String nom);
 
-    List<Client> findByNomStartingWithIgnoreCase(String prefix);
+    List<Client> findByNomStartingWithIgnoreCase(String ch);
 
-    List<Client> findByPrenomEndingWithIgnoreCase(String suffix);
+    List<Client> findByPrenomEndingWithIgnoreCase(String ch);
 
     List<Client> findByDateNaissanceIsNull();
 
@@ -44,11 +44,15 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
 
     List<Client> findByCarteFidelite_PtsAccumulesGreaterThan(Integer pts);
 
-    List<Client> findByCarteFidelite_PtsAccumulesGreaterThanOrEqualTo(Integer pts);
+    List<Client> findByCarteFidelite_PtsAccumulesGreaterThanEqual(Integer pts);
 
     List<Client> findByCarteFidelite_PtsAccumulesBetween(Integer min, Integer max);
 
     List<Client> findByCommandes_Articles_Nom(String nomArticle);
 
     List<Client> findByNomContainingIgnoreCaseAndCommandes_Articles_Type(String nom, String typeArticle);
+
+    //les affectations simple//
+    Client findByCin(long cin);
+    ///////////////////////////
 }

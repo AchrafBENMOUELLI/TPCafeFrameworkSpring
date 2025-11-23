@@ -63,6 +63,18 @@ public class CommandeRestController {
         return commandeService.verifCommande(id);
     }
 
+
+    /*les methodes simpels*/
+    @PostMapping("/{idCommande}/desaffecter-client")
+    public void desaffecterClientDeCommande(@PathVariable long idCommande) {
+        commandeService.desaffecterClientDeCommande(idCommande);
+    }
+    //////////////////////////////////////
+
+
+
+
+
     /*
     // Anciennes méthodes utilisant l’entité Commande
     @GetMapping

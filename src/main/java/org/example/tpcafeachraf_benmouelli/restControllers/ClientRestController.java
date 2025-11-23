@@ -3,9 +3,12 @@ package org.example.tpcafeachraf_benmouelli.restControllers;
 import lombok.AllArgsConstructor;
 import org.example.tpcafeachraf_benmouelli.dto.client.ClientRequest;
 import org.example.tpcafeachraf_benmouelli.dto.client.ClientResponse;
+import org.example.tpcafeachraf_benmouelli.entities.Client;
 import org.example.tpcafeachraf_benmouelli.services.client.IClientService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -57,46 +60,31 @@ public class ClientRestController {
         return clientService.verifyClient(id);
     }
 
-    // ─────────────── Anciennes méthodes conservées en commentaire ───────────────
-    /*
-    @GetMapping
-    public List<Client> displayallclients() {
-        return clientService.selectAllClients();
+    /*les methodes des affectation simples*/
+    //////////////////////////////////////////////////////
+    @PostMapping("/{idClient}/carte/{idCarte}")
+    public void affecterCarteAClient(@PathVariable long idClient, @PathVariable long idCarte) {
+        clientService.affecterCarteAClient(idCarte, idClient);
     }
 
-    @PostMapping
-    public Client addclient(@RequestBody Client client) {
-        return clientService.addclient(client);
+    //////////////////////////////////////////////////////
+    @PostMapping("/{idClient}/commande/{idCommande}")
+    public void affecterCommandeAClient(@PathVariable long idClient, @PathVariable long idCommande) {
+        clientService.affecterCommandeAClient(idCommande, idClient);
     }
 
-    @PostMapping("/addallclient")
-    public List<Client> addallclient(@RequestBody List<Client> clients) {
-        return clientService.saveClients(clients);
+    ////////////////////////////////////////////////////////
+    @PostMapping("/commande/assign")
+    public void affecterCommandeAClient(@RequestParam String nomClient,
+                                        @RequestParam String prenomClient,
+                                        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateCommande) {
+        clientService.affecterCommandeAClient(dateCommande, nomClient, prenomClient);
     }
 
-    @GetMapping("/displayclientbyId/{id}")
-    public Client displayclientbyId(@PathVariable long id) {
-        return clientService.selectClient(id);
+    ////////////////////////////////////////////////////////
+    @PostMapping("/add")
+    public Client ajouterClientEtCarteFidelite(@RequestBody Client client) {
+        return clientService.ajouterClientEtCarteFidelite(client);
     }
 
-    @DeleteMapping("/deleteclientbyId/{id}")
-    public void deleteclientbyId(@PathVariable long id) {
-        clientService.deleteClientById(id);
-    }
-
-    @DeleteMapping("/deleteclients")
-    public void deleteallclients(@RequestBody List<Client> clients ) {
-        clientService.deleteAllClients();
-    }
-
-    @GetMapping("/countallclient")
-    public long countallclient() {
-        return clientService.countingClients();
-    }
-
-    @GetMapping("/existclient/{id}")
-    public boolean existclient(@PathVariable long id) {
-        return clientService.verifyClient(id);
-    }
-    */
 }
