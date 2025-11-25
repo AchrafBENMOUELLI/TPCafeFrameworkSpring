@@ -3,6 +3,8 @@ package org.example.tpcafeachraf_benmouelli.repositories;
 import org.example.tpcafeachraf_benmouelli.entities.Client;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.example.tpcafeachraf_benmouelli.entities.TypeArticle;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 
 import java.time.LocalDate;
@@ -10,7 +12,7 @@ import java.util.List;
 
 
 public interface ClientRepository extends JpaRepository<Client, Long> {
-    List<Client> findByNom(String nom);
+   List<Client> findByNom(String nom);
 
     List<Client> findByPrenom(String prenom);
 
@@ -49,12 +51,26 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
     List<Client> findByCarteFidelite_PointAccumulesGreaterThanEqual(Integer pts);
 
     List<Client> findByCarteFidelite_PointAccumulesBetween(Integer min, Integer max);
+/*
+    List<Client> findByCommandesDetail_commandeArticleNomArticle(String nomArticle);
+*/
+@Query("SELECT c FROM Client c JOIN c.commandes com JOIN com.detail_commande d JOIN d.article a WHERE a.nomArticle = :nomArticle")
+List<Client> findClientsByNomArticle(@Param("nomArticle") String nomArticle);
+/*
+ List<Client> findByNomContainingIgnoreCaseAndCommandesDetail_commandeTypeArticle(String nom, TypeArticle typeArticle);
+*/
+@Query("""
+    SELECT c FROM Client c 
+    JOIN c.commandes com 
+    JOIN com.detail_commande d 
+    WHERE LOWER(c.nom) LIKE LOWER(CONCAT('%', :nom, '%')) 
+""")
+List<Client> findClientsByNomAndTypeArticle(
+        @Param("nom") String nom,
+        @Param("typeArticle") TypeArticle typeArticle
+);
 
-    List<Client> findByCommandes_Detail_commande_Article_NomArticle(String nomArticle);
-
-    List<Client> findByNomContainingIgnoreCaseAndCommandes_Detail_commande_Article_TypeArticle(String nom, TypeArticle typeArticle);
-
-    //les affectations simple//
+ //les affectations simple//
     Client findByIdClient(long cin);
     ///////////////////////////
 }

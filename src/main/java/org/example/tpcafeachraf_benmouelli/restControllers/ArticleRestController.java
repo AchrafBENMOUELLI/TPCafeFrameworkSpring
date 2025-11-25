@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.example.tpcafeachraf_benmouelli.dto.article.ArticleRequest;
 import org.example.tpcafeachraf_benmouelli.dto.article.ArticleResponse;
 import org.example.tpcafeachraf_benmouelli.entities.Article;
+import org.example.tpcafeachraf_benmouelli.entities.Promotion;
 import org.example.tpcafeachraf_benmouelli.services.article.IArticleService;
 import org.springframework.web.bind.annotation.*;
 
@@ -76,6 +77,11 @@ public class ArticleRestController {
     @PostMapping("/{idArticle}/desaffecter-promo/{idPromo}")
     public void desaffecterPromotionDUnArticle(@PathVariable long idArticle, @PathVariable long idPromo) {
         articleService.desaffecterPromotionDUnArticle(idArticle, idPromo);
+    }
+
+    @PostMapping("/{idArticle}/ajouter-promo")
+    public void ajouterPromoEtAffecterAArticle(@PathVariable long idArticle, @RequestBody Promotion promotion) {
+        articleService.ajouterPromoEtAffecterAArticle(promotion, idArticle);
     }
     //////////////////////////////////////
 }

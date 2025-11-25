@@ -122,5 +122,12 @@ public class AdresseService implements IAdresseService {
         clientRepository.save(client);
         return "Adresse affectée avec succès au client " + client.getNom();
     }
+
+    @Override
+    public void ajouterEtAffecterAdresseAClient(Adresse ad, Client c) {
+        ad = adresseRepository.save(ad);
+        c.setAdresse(ad);
+        clientRepository.save(c);
+    }
     ////////////////////////////
 }

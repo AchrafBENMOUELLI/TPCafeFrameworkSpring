@@ -1,6 +1,7 @@
 package org.example.tpcafeachraf_benmouelli.repositories;
 
 import org.example.tpcafeachraf_benmouelli.entities.Article;
+import org.example.tpcafeachraf_benmouelli.entities.Promotion;
 import org.example.tpcafeachraf_benmouelli.entities.TypeArticle;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -56,4 +57,8 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
 
     @Query("SELECT a FROM Article a WHERE LOWER(a.nomArticle) LIKE LOWER(CONCAT('%', :value, '%')) AND a.prixArticle BETWEEN :min AND :max")
     List<Article> getByNomContainsAndPrixBetween(@Param("value") String value, @Param("min") float min, @Param("max") float max);
+
+
+
+
 }

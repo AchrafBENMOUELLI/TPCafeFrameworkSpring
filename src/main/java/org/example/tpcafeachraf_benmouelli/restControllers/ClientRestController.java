@@ -3,7 +3,9 @@ package org.example.tpcafeachraf_benmouelli.restControllers;
 import lombok.AllArgsConstructor;
 import org.example.tpcafeachraf_benmouelli.dto.client.ClientRequest;
 import org.example.tpcafeachraf_benmouelli.dto.client.ClientResponse;
+import org.example.tpcafeachraf_benmouelli.entities.CarteFidelite;
 import org.example.tpcafeachraf_benmouelli.entities.Client;
+import org.example.tpcafeachraf_benmouelli.entities.Commande;
 import org.example.tpcafeachraf_benmouelli.services.client.IClientService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
@@ -86,5 +88,16 @@ public class ClientRestController {
     public Client ajouterClientEtCarteFidelite(@RequestBody Client client) {
         return clientService.ajouterClientEtCarteFidelite(client);
     }
+    ///////////////////////////////////////////////////////////
+    @PostMapping("/commande/ajouter")
+    public void ajouterCommandeEtAffecterAClient(@RequestParam String nomClient, @RequestParam String prenomClient, @RequestBody Commande commande) {
+        clientService.ajouterCommandeEtAffecterAClient(commande, nomClient, prenomClient);
+    }
+    /////////////////////////////////////////////////////////////
+    @PostMapping("/add-with-carte")
+    public void ajouterClientEtCarte(@RequestBody CarteFidelite carte) {
+        clientService.ajouterClientEtCarteFidelite(carte);
+    }
+
 
 }

@@ -2,7 +2,9 @@ package org.example.tpcafeachraf_benmouelli.services.client;
 
 import org.example.tpcafeachraf_benmouelli.dto.client.ClientRequest;
 import org.example.tpcafeachraf_benmouelli.dto.client.ClientResponse;
+import org.example.tpcafeachraf_benmouelli.entities.CarteFidelite;
 import org.example.tpcafeachraf_benmouelli.entities.Client;
+import org.example.tpcafeachraf_benmouelli.entities.Commande;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -25,7 +27,8 @@ public interface IClientService {
     void affecterCommandeAClient(LocalDate dateCommande, String nomClient, String prenomClient);
 
     Client ajouterClientEtCarteFidelite(Client client);
-
+    void ajouterCommandeEtAffecterAClient(Commande c , String nomClient , String prenomClient);
+    void ajouterClientEtCarteFidelite(CarteFidelite carte);
     ////////////////////////////
 
     // ─────────────── Anciennes méthodes conservées ───────────────

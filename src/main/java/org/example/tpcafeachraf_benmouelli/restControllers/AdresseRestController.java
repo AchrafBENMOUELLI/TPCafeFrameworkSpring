@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import org.example.tpcafeachraf_benmouelli.dto.adresse.AdresseRequest;
 import org.example.tpcafeachraf_benmouelli.dto.adresse.AdresseResponse;
 import org.example.tpcafeachraf_benmouelli.entities.Adresse;
+import org.example.tpcafeachraf_benmouelli.entities.Client;
+import org.example.tpcafeachraf_benmouelli.entities.Commande;
 import org.example.tpcafeachraf_benmouelli.services.adresse.IAdresseService;
 import org.springframework.web.bind.annotation.*;
 
@@ -92,4 +94,10 @@ public class AdresseRestController {
     }
 
     //////////////////////////////////////
+    @PostMapping("/ajouterAdresse")
+    public void ajouterAdresseEtAffecter(@RequestBody Client client) {
+        adresseService.ajouterEtAffecterAdresseAClient(client.getAdresse(), client);
+    }
+
+    ////////////////////////////////////////
 }

@@ -3,6 +3,7 @@ package org.example.tpcafeachraf_benmouelli.services.adresse;
 import org.example.tpcafeachraf_benmouelli.dto.adresse.AdresseRequest;
 import org.example.tpcafeachraf_benmouelli.dto.adresse.AdresseResponse;
 import org.example.tpcafeachraf_benmouelli.entities.Adresse;
+import org.example.tpcafeachraf_benmouelli.entities.Client;
 
 import java.util.List;
 
@@ -20,6 +21,8 @@ public interface IAdresseService {
 
     //les affectation simples//
     String affecterAdresseAClient(String rue,long cin);
+
+    void ajouterEtAffecterAdresseAClient(Adresse ad, Client c);
     ///////////////////////////
 
 

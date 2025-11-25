@@ -156,7 +156,24 @@ public class ClientService implements IClientService {
         return clientRepository.save(savedClient);
     }
 
+    @Override
+    public void ajouterCommandeEtAffecterAClient(Commande c, String nomClient, String prenomClient) {
+        c= commandeRepository.save(c);
+        Client client = clientRepository.findByNomAndPrenom(nomClient, prenomClient);
+        c.setClient(client);
+        clientRepository.save(client);
+    }
+
+    @Override
+    public void ajouterClientEtCarteFidelite(CarteFidelite carte) {
+        carteFideliteRepository.save(carte);
+        Client client = new Client();
+        client.setCarteFidelite(carte);
+        clientRepository.save(client);
+    }
+
     ////////////////////////////////
+
 
 ////////////////////////////
 }
